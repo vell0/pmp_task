@@ -1,0 +1,26 @@
+
+CUESTION 1:
+Temperature: El coeficiente estimado para la temperatura es 110.71. Esto implica que, manteniendo constantes todas las demás características, un aumento de 1 grado Celsius en la 
+temperatura se asocia con un aumento de aproximadamente 110.71 en el número de bicicletas alquiladas.
+
+Windspeed: El coeficiente estimado para la velocidad del viento es -42.51. Esto significa que, manteniendo constantes todas las demás características, un aumento de 1 unidad
+ en la velocidad del viento se asocia con una disminución de aproximadamente 42.51 en el número de bicicletas alquiladas.
+
+Workingday: El coeficiente estimado para los días laborables es 124.92. Esto sugiere que, manteniendo constantes todas las demás características, en un día laborable se alquilan 
+aproximadamente 124.92 bicicletas más que en un día no laborable.
+
+Holiday: El coeficiente estimado para los días festivos es -686.12. Esto indica que, manteniendo constantes todas las demás características, en un día festivo se alquilan 
+aproximadamente 686.12 bicicletas menos que en un día no festivo.
+
+Sabemos que Para workingday el coeficiente es 124.920938. Como pasa de un día no laborable a uno laborable, se espera un aumento de aproximadamente 124.92 bicicletas alquiladas,
+manteniendo constantes las demás características. Para windspeed: el coeficiente es -42.513472. Si la velocidad del viento aumenta en una unidad, se espera una disminución de 
+aproximadamente 42.51 bicicletas alquiladas, manteniendo constantes las demás características.
+Dado que el modelo lineal asume que las características tienen efectos aditivos e independientes, la predicción del número total de bicicletas alquiladas cambiaría en 
+(124.92 - 42.51) = 82.41 bicicletas alquiladas.
+
+Finalmente, resaltar que efectivamente este enfoque tiene sus limitaciones. Si hay interacciones entre estas características que el modelo lineal no captura, las predicciones pueden 
+no ser precisas. En tales casos, se podrían requerir modelos más avanzados o términos de interacción para capturar la relación entre las características y la demanda de alquiler
+de bicicletas de manera más precisa. Si hay relaciones no lineales o interacciones complejas entre las características, el modelo lineal no las capturará adecuadamente, lo que lleva
+a explicaciones potencialmente incorrectas.
+Dado que las explicaciones del modelo lineal son contrastivas, podrían ser menos relevantes para los datos reales si la instancia de referencia (todas las características continuas
+ en cero y las características categóricas en sus niveles de referencia) es artificial y poco probable que ocurra en el conjunto de datos.
