@@ -1,0 +1,98 @@
+---
+title: "Practica 5"
+author: "Pablo Vellosillo, Miguel Peris, Ferran Heredia"
+date: "2023-05-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reshape2)
+library(plotly)
+library(fairness)
+library(dplyr)
+library(partykit)
+library(pre)
+library(randomForest)
+library(pdp)
+
+```
+
+```{r}
+# Definir las variables predictoras y la variable objetivo
+predictors <- data_bikes[, c("workingday", "holiday", "season_spring", "season_summer","season_fall", "MISTY", "RAIN", "temp", "hum", "windspeed", "days_since_2011")]
+
+target <- data_bikes$cnt
+
+# Entrenar el modelo de bosque aleatorio
+rf_model <- randomForest(predictors, target, ntree=100, importance=TRUE)
+
+# Crear PDP para otras características de interés
+
+pdp_wind <- partial(rf_model, pred.var = "windspeed", plot = TRUE, plot.engine = "ggplot2") + ylab("Predicted number of bike rentals") + scale_y_continuous(limits = c(0, 6000))
+
+pdp_hum <- partial(rf_model, pred.var = "hum", plot = TRUE, 
+                   plot.engine = "ggplot2") + ylab("Predicted number of bike rentals") + scale_y_continuous(limits = c(0, 6000))
+
+pdp_temp <- partial(rf_model, pred.var = "temp", plot = TRUE,plot.engine = "ggplot2") + ylab("Predicted number of bike rentals") + scale_y_continuous(limits = c(0, 6000))
+
+pdp_2011 <- partial(rf_model, pred.var = "days_since_2011", plot = TRUE, plot.engine = "ggplot2") + ylab("Predicted number of bike rentals") + scale_y_continuous(limits = c(0, 6000))
+
+plot(pdp_wind)
+plot(pdp_hum)
+plot(pdp_temp)
+plot(pdp_2011)
+
+
+
+```
+```{r}
+
+# Extract a set of random samples from the BBDD before generating the data for the Partial Dependency Plot. 
+bike_sample <- data_bikes %>% sample_n(size = 400, replace = FALSE)
+
+
+predictors_sample <- bike_sample[, c("workingday", "holiday", "season_spring", "season_summer","season_fall", "MISTY", "RAIN", "temp", "hum", "windspeed", "days_since_2011")]
+
+target_sample <- bike_sample$cnt
+
+# Fit random forest model
+rf_model_sample <- randomForest(predictors_sample, target_sample, ntree=100, importance=TRUE)
+
+# Generate PDP
+bike_pdp <- partial(rf_model_sample, pred.var = c("hum", "temp"), grid.resolution = 25, plot = TRUE, plot.engine = "ggplot2") + geom_tile(width = 0.1, height = 0.1) + scale_fill_gradientn(colors = c("blue", "green", "yellow", "red")) + labs(title = "Partial Dependence Plot for Bike Rentals", x = "Humidity", y = "Temperature", fill = "Predicted Bikes Rented")
+
+bike_pdp
+
+```
+```{r}
+house_sample_price <- read.csv('C:/Users/pablo/Downloads/Practica 5 Sin sol/Practica 5 Sin sol/kc_house_data.csv')
+
+house_sample <- house_sample_price %>% sample_n(10000)
+
+predictors_house <- house_sample[, c("bedrooms", "bathrooms", "sqft_living", "sqft_lot", "floors", "yr_built")]
+
+target_house <- house_sample$price
+
+rf_house <- randomForest(predictors_house, target_house, ntree=100, importance=TRUE)
+
+# PDP plot
+
+pdp_bed <- partial(rf_house, pred.var = "bedrooms", plot = TRUE, plot.engine = "ggplot2") + ylab("Price")
+
+pdp_bath <- partial(rf_house, pred.var = "bathrooms", plot = TRUE, 
+                   plot.engine = "ggplot2") + ylab("Price")
+
+pdp_sqft <- partial(rf_house, pred.var = "sqft_living", plot = TRUE,plot.engine = "ggplot2") + ylab("Price")
+
+pdp_floors <- partial(rf_house, pred.var = "floors", plot = TRUE, plot.engine = "ggplot2") + ylab("Price")
+
+plot(pdp_bed)
+plot(pdp_bath)
+plot(pdp_sqft)
+plot(pdp_floors)
+
+
+
+```
+
